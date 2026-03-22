@@ -5,7 +5,7 @@ from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
-api_key = os.getenv("GOOGLE_API_KEY")
+api_key = os.getenv("AIzaSyDMOG0We0wCSWuWs4idtzmaidal6XCM20o")
 
 if not api_key:
     raise ValueError("No GOOGLE_API_KEY found. Check your .env file or GitHub Secrets.")

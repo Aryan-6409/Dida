@@ -1,1 +1,65 @@
-hshs
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hinglish Chatbot</title>
+    <!-- Using jQuery for easy backend communication -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; padding: 20px; }
+        #chatbox { height: 400px; border: 1px solid #ccc; background: white; overflow-y: scroll; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        .userText { text-align: right; color: blue; margin: 5px 0; }
+        .botText { text-align: left; color: green; margin: 5px 0; }
+        #userInput { display: flex; gap: 10px; }
+        #textInput { flex-grow: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+        #buttonInput { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Gemini Hinglish Friend</h1>
+    
+    <div id="chatbox">
+        <p class="botText"><span>Hi! I'm your friendly friend. Kaise ho? (How are you?)</span></p>
+    </div>
+
+    <div id="userInput">
+        <!-- The name="msg" attribute matches your Python code: request.form.get("msg") -->
+        <input id="textInput" type="text" name="msg" placeholder="Type your message here..." required>
+        <button id="buttonInput">Send</button>
+    </div>
+
+    <script>
+        function getResponse() {
+            let userText = $("#textInput").val();
+            if (userText.trim() === "") return;
+
+            // Add user message to chatbox
+            $("#chatbox").append('<p class="userText"><span>' + userText + '</span></p>');
+            $("#textInput").val(""); // Clear input
+            
+            // Auto-scroll to bottom
+            $("#chatbox").scrollTop($("#chatbox")[0].scrollHeight);
+
+            // Send POST request to your Flask /get_response route
+            $.post("/get_response", { msg: userText }).done(function(data) {
+                let botHtml = '<p class="botText"><span>' + data + '</span></p>';
+                $("#chatbox").append(botHtml);
+                $("#chatbox").scrollTop($("#chatbox")[0].scrollHeight);
+            });
+        }
+
+        // Send on button click
+        $("#buttonInput").click(function() {
+            getResponse();
+        });
+
+        // Send on Enter key press
+        $("#textInput").keypress(function(e) {
+            if (e.which == 13) {
+                getResponse();
+            }
+        });
+    </script>
+</body>
+</html>
